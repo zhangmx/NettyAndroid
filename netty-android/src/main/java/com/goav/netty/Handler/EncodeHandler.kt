@@ -22,13 +22,13 @@ internal class EncodeHandler : MessageToByteEncoder<MessageBasic>() {
     @Throws(Exception::class)
     override fun encode(ctx: ChannelHandlerContext, msg: MessageBasic, out: ByteBuf) {
         try {
-            val bytes = msg.read();
+            val bytes = msg.read()
             val size = bytes.size
             out.writeInt(size + 4)//body长度
             out.writeBytes(bytes)
-            System.out.println("size=" + size)
+            println("size=$size")
         } catch (e: Exception) {
-            System.out.println(e.message)
+            println(e.message)
         }
     }
 

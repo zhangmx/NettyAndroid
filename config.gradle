@@ -1,13 +1,13 @@
 ext {
     netty = [
-            compileSdkVersion: 25,
-            buildToolsVersion: "26.0.2",
-            supportVersion   : "25.3.1",
-            minSdkVersion    : 14,
-            targetSdkVersion : 25,
+            compileSdkVersion: 33,
+            buildToolsVersion: "30.0.3",
+            supportVersion   : "30.0.3",
+            minSdkVersion    : 30,
+            targetSdkVersion : 33,
             versionCode      : 10,
             versionName      : "0.5"
-    ];
+    ]
 
     push = [
             userOrg       : '1024icloud',
@@ -16,5 +16,5 @@ ext {
             publishVersion: netty.versionName,
             desc          : 'NettyAndroid',
             website       : 'https://github.com/goAV/NettyAndroid'
-    ];
+    ]
 }

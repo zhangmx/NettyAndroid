@@ -1,3 +1,6 @@
+package com.goav.app
+
+import SocketPong
 import com.goav.netty.Handler.ClientHelper
 import com.goav.netty.Handler.ReConnect
 import com.goav.netty.Impl.ChannelConnectImpl
@@ -8,37 +11,39 @@ import io.netty.channel.ChannelPromise
 import io.netty.channel.socket.SocketChannel
 import java.util.concurrent.TimeUnit
 
-fun main(args: Array<String>) {
-    val client = ClientHelper.init()
+fun main() {
+    ClientHelper.init()
             .reConnect(ReConnect(true, 2))
             .address("0", 7373)
             .addCallBack(object : ChannelConnectImpl {
                 override fun onConnectCallBack(sc: SocketChannel?) {
-                    System.out.println((sc == null).toString())
+                    println((sc == null).toString())
                 }
 
-                override fun addChannelHandler(pipeline: ChannelPipeline): ChannelPipeline = pipeline.addLast(TestHandler()).addLast(OutChannel())
+                override fun addChannelHandler(pipeline: ChannelPipeline): ChannelPipeline = pipeline.addLast(
+                    TestHandler()
+                ).addLast(OutChannel())
             })
             .build()
-            .connect();
+            .connect()
 }
 
 
 class TestHandler : io.netty.channel.ChannelDuplexHandler() {
     override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
         val value = String(msg as ByteArray)
-        System.out.println(value)
+        println(value)
 
         //        super.channelRead(ctx, msg)
     }
 
     override fun write(ctx: ChannelHandlerContext?, msg: Any?, promise: ChannelPromise?) {
-        System.out.println("write")
+        println("write")
         super.write(ctx, msg, promise)
     }
 
     override fun channelActive(ctx: ChannelHandlerContext?) {
-        System.out.println("channelActive")
+        println("channelActive")
         ctx?.writeAndFlush("connectByKotlin")
         ctx?.executor()?.scheduleAtFixedRate(
                 { ctx.writeAndFlush(SocketPong()) },
@@ -49,37 +54,37 @@ class TestHandler : io.netty.channel.ChannelDuplexHandler() {
     }
 
     override fun channelRegistered(ctx: ChannelHandlerContext?) {
-        System.out.println("channelRegistered")
+        println("channelRegistered")
         super.channelRegistered(ctx)
     }
 
     override fun channelUnregistered(ctx: ChannelHandlerContext?) {
-        System.out.println("channelUnregistered")
+        println("channelUnregistered")
         ctx?.close()
         //        super.channelUnregistered(ctx)
     }
 
     override fun channelInactive(ctx: ChannelHandlerContext?) {
-        System.out.println("channelInactive")
+        println("channelInactive")
         super.channelInactive(ctx)
     }
 
     override fun close(ctx: ChannelHandlerContext?, promise: ChannelPromise?) {
-        System.out.println("close")
+        println("close")
         super.close(ctx, promise)
     }
 
-    override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
-        System.out.println(cause?.message)
-        super.exceptionCaught(ctx, cause)
-    }
+//    override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
+//        println(cause?.message)
+//        super.exceptionCaught(ctx, cause)
+//    }
 }
 
 
 class OutChannel : ChannelOutboundHandlerAdapter() {
 
     override fun write(ctx: ChannelHandlerContext?, msg: Any?, promise: ChannelPromise?) {
-        System.out.print("write out")
+        print("write out")
         super.write(ctx, msg, promise)
     }
 
